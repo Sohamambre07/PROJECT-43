@@ -1,5 +1,6 @@
 var PLAY = 1;
 var END = 0;
+var WIN = 2;
 var gameState = PLAY;
 
 var trex, trex_running, trex_collided;
@@ -72,7 +73,12 @@ function draw() {
   //trex.debug = true;
   background(255);
   text("Score: "+ score, 500,50);
-  
+  textSize(60)
+
+  if(score > 500){
+
+    gameState = WIN 
+  }
   if (gameState===PLAY){
     score = score + Math.round(getFrameRate()/60);
     ground.velocityX = -(6 + 3*score/100);
@@ -117,7 +123,23 @@ function draw() {
     }
   }
   
-  
+  if(gameState === WIN){
+    text ("you won the game", width/2,height/2)
+    textSize(40)
+    
+    //set velcity of each game object to 0
+    ground.velocityX = 0;
+    trex.velocityY = 0;
+    obstaclesGroup.setVelocityXEach(0);
+    cloudsGroup.setVelocityXEach(0);
+    
+    //change the trex animation
+    trex.changeAnimation("collided",trex_collided);
+    
+    //set lifetime of the game objects so that they are never destroyed
+    obstaclesGroup.setLifetimeEach(-1);
+    cloudsGroup.setLifetimeEach(-1);
+  }
   drawSprites();
 }
 
